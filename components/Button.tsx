@@ -23,7 +23,7 @@ const Button = ({
   if (className) {
     return (
       <button
-        className={`cursor-pointer w-max h-11 px-6 py-2 mt-4 rounded-lg font-bold text-sm flex flex-row items-center justify-center transition duration-500 outline-none ${className}`}
+        className={`cursor-pointer w-fit h-11 px-6 py-2 mt-4 rounded-lg font-bold text-sm flex flex-row items-center justify-center transition duration-500 outline-none ${className}`}
         onClick={handleClick}
         type={type}
       >
@@ -35,7 +35,7 @@ const Button = ({
   }
   return (
     <button
-      className="cursor-pointer w-max h-12 px-8 py-2 mt-4 rounded-lg flex flex-row items-center justify-center transition duration-500 outline-none font-bold text-sm"
+      className="cursor-pointer w-fit h-12 px-8 py-2 mt-4 rounded-lg flex flex-row items-center justify-center transition duration-500 outline-none font-bold text-sm"
       onClick={handleClick}
       type={type}
     >

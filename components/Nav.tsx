@@ -72,7 +72,9 @@ const Nav = ({ color }: { color?: string }) => {
   }, [active, account]);
   return (
     <section
-      className={` ${color ? color : ""} fixed top-0 left-0 w-full z-20 `}
+      className={`sm:px-0 px-4 ${
+        color ? color : ""
+      } fixed top-0 left-0 w-full z-20 `}
     >
       <div className="md:max-w-screen-lg md:mx-auto relative border-b-[1px] border-[#ffffff34] py-3">
         <nav className="flex flex-row items-center justify-between">

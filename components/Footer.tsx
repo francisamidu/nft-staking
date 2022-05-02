@@ -35,7 +35,7 @@ const Footer = () => {
   ]);
   return (
     <footer className="sm:max-w-screen-lg mx-auto">
-      <div className="flex flex-col sm:flex-row py-4 border-t-2 border-[#ffffff34] justify-between items-center">
+      <div className="flex flex-col sm:flex-row py-4 border-t-2 border-[#ffffff34] justify-between items-center text-center sm:text-inherit">
         <h1 className="text-1xl font-bold capitalize">{name}</h1>
         <p className="my-4 sm:my-0">
           <span className="font-bold">
