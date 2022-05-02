@@ -6,4 +6,4 @@ import AccountHelper from "./accountHelper";
 export { client as ipfs, millify, uid };
 
 export const { getProvider, getAccount } = AccountHelper;
-export const { formatDate, formatCurrency } = Formatter;
+export const { formatDate, formatDateSimple, formatCurrency } = Formatter;

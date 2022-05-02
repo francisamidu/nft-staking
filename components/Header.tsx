@@ -7,11 +7,11 @@ import { VscArrowRight as ArrowRight } from "react-icons/vsc";
 
 const Header = () => {
   const handleClick = () => {
-    router.push("/dashboard?tag=mint_an_nft");
+    router.push("/staking");
   };
   return (
     <section className="min-h-[90vh] py-3">
-      <div className="md:max-w-screen-lg md:mx-auto flex flex-col sm:flex-row items-center py-3 sm:mt-20 mt-24 h-full">
+      <div className="sm:max-w-screen-lg sm:mx-auto flex flex-col sm:flex-row items-center py-3 sm:mt-20 mt-24 h-full">
         <div className="flex flex-col w-full sm:w-1/2">
           <h1 className="sm:text-5xl text-3xl w-4/5 mx-auto sm:mx-0 sm:w-full text-center sm:text-left sm:leading-relaxed font-bold ">
             Earn up to 30% from NFT staking + daily rewards

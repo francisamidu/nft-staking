@@ -4,6 +4,7 @@ import Head from "next/head";
 import { Nav } from ".";
 import { useApp } from "../contexts";
 import { useIntersectionObserver } from "../hooks";
+import Footer from "./Footer";
 
 const HomeLayout = ({
   children,
@@ -30,6 +31,7 @@ const HomeLayout = ({
       </Head>
       <Nav color={color} />
       {children}
+      <Footer />
     </>
   );
 };

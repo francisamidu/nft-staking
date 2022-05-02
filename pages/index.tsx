@@ -1,12 +1,11 @@
 import { NextComponentType } from "next";
 import React from "react";
-import { Layout, Header, Footer } from "../components";
+import { Layout, Header } from "../components";
 
 const App = () => {
   return (
     <>
       <Header />
-      <Footer />
     </>
   );
 };

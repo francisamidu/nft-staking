@@ -77,7 +77,7 @@ const Nav = ({ color }: { color?: string }) => {
         color ? color : ""
       } fixed top-0 left-0 w-full z-20`}
     >
-      <div className="md:max-w-screen-lg md:mx-auto relative border-b-[1px] border-[#ffffff34] py-3">
+      <div className="sm:max-w-screen-xl sm:mx-auto relative border-b-[1px] border-[#ffffff34] py-3">
         <nav className="flex flex-row items-center justify-between">
           <h1 className="font-bold text-2xl ">{name}</h1>
           <div className="sm:flex flex-row items-center relative">

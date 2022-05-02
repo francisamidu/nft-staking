@@ -20,14 +20,21 @@ class Formatter {
     const day = DAYS[newDate.getDay()];
     const month = MONTHS[newDate.getMonth()];
     const year = newDate.getFullYear();
-    return `${day}, ${month} ${year}`;
+    return `${day}/${month}/${year}`;
+  }
+  static formatDateSimple(date: number | Date) {
+    const newDate = new Date(date);
+    const date_ = newDate.getDate();
+    const month = newDate.getMonth();
+    const year = newDate.getFullYear();
+    return `${date_}/${month}/${year}`;
   }
   static formatCurrency(num: number | string) {
     const newNumber = Number(num);
     if (typeof newNumber === "number") {
       const formatter = new Intl.NumberFormat("en-Us", {
         style: "currency",
-        currency: "USD",
+        currency: "EUR",
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
       });

@@ -17,6 +17,7 @@ body {
     box-sizing: border-box;
     background-color: var(--accent-black) !important;
     color: var(--white);
+    font-size: 14px;
     font-family: "Montserrat", sans-serif;
 }
 
@@ -40,4 +41,10 @@ body {
         color: var(--white) !important;
         border-color: var(--main-accent) !important;
     }
+}
+
+.staking-nft-list {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: 180px;
+    gap: 0.45em;
 }
