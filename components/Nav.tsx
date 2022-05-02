@@ -4,7 +4,7 @@ import { useApp, useWallet } from "../contexts";
 import Link from "next/link";
 import millify from "millify";
 import { Button } from ".";
-import { BiWallet as IWallet } from "react-icons/bi";
+import { BiWallet as IWallet, BiMenu as IMenu } from "react-icons/bi";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
@@ -70,11 +70,12 @@ const Nav = ({ color }: { color?: string }) => {
       );
     }
   }, [active, account]);
+
   return (
     <section
-      className={`sm:px-0 px-4 ${
+      className={`sm:px-0 px-4 bg-[#24272c] ${
         color ? color : ""
-      } fixed top-0 left-0 w-full z-20 `}
+      } fixed top-0 left-0 w-full z-20`}
     >
       <div className="md:max-w-screen-lg md:mx-auto relative border-b-[1px] border-[#ffffff34] py-3">
         <nav className="flex flex-row items-center justify-between">
@@ -99,7 +100,7 @@ const Nav = ({ color }: { color?: string }) => {
                 onClick={() => redirect("/staking")}
               />
             </div>
-            <div className="ml-3 rounded-3xl flex flex-row items-center border-[1px] border-[#ffffff34] cursor-pointer">
+            <div className="ml-3 rounded-3xl hidden sm:flex flex-row items-center border-[1px] border-[#ffffff34] cursor-pointer">
               <span className="hidden sm:block font-bold mx-4 mr-6  text-white">
                 0.00
               </span>
@@ -110,6 +111,34 @@ const Nav = ({ color }: { color?: string }) => {
                 src="/avatar1.png"
               ></Image>
             </div>
+            <IMenu
+              className="text-2xl text-white ml-2 sm:hidden cursor-pointer"
+              onClick={() => setShowMenu(!showMenu)}
+            />
+            {showMenu && (
+              <div className="flex flex-col p-3 rounded shadow absolute top-2 right-6 bg-[#383b42] w-max transition-all duration-500">
+                {links.map((link) => (
+                  <Link href={link.path} key={link.id}>
+                    <a
+                      className={`transition-colors relative duration-300 mb-2 border-transparent text-[#ababbb] hover:text-[#eee] ${
+                        link.active ? "text-[#eee]" : ""
+                      }`}
+                      onClick={() => setLinkState(link.id)}
+                    >
+                      {link.text}
+                    </a>
+                  </Link>
+                ))}
+                <Link href="">
+                  <a
+                    className={`transition-colors relative duration-300 border-transparent text-[#ababbb] hover:text-[#eee] `}
+                    onClick={() => redirect("/staking")}
+                  >
+                    Start Staking
+                  </a>
+                </Link>
+              </div>
+            )}
           </div>
         </nav>
       </div>

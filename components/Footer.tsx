@@ -48,7 +48,7 @@ const Footer = () => {
 
         <div className="flex flex-row items-center justify-between">
           {socials.map((social) => (
-            <a key={social.id} href={social.link} className="w-fit mr-4">
+            <a key={social.id} href={social.link} className="w-fit ml-4">
               {social.icon}
             </a>
           ))}

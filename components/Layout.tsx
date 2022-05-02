@@ -3,6 +3,7 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { Nav } from ".";
 import { useApp } from "../contexts";
+import { useIntersectionObserver } from "../hooks";
 
 const HomeLayout = ({
   children,
