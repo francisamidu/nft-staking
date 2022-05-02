@@ -79,7 +79,7 @@ const Nav = ({ color }: { color?: string }) => {
     >
       <div className="sm:max-w-screen-xl sm:mx-auto relative border-b-[1px] border-[#ffffff34] py-3">
         <nav className="flex flex-row items-center justify-between">
-          <h1 className="font-bold text-2xl ">{name}</h1>
+          <h1 className="font-bold text-base uppercase">{name}</h1>
           <div className="sm:flex flex-row items-center relative">
             <div className="hidden sm:flex flex-col sm:flex-row items-center">
               {links.map((link) => (
