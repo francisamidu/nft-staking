@@ -1,49 +1,138 @@
+import { ethers } from "ethers";
 import { NextComponentType } from "next";
-import React, { useState } from "react";
-import { Button, Layout, StakingNFTList } from "../components";
-import { formatCurrency, uid } from "../helpers";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { Asset, Button, Layout, Staker } from "../components";
+import { useContract, useStats, useWallet } from "../contexts";
+import { formatDateRelative } from "../helpers";
+import { IExtAsset, IStat } from "../interfaces";
 
 const Staking = () => {
-  const [stats, setStats] = useState([
-    {
-      id: uid(),
-      name: "Claimed rewards",
-      value: formatCurrency(1000),
-    },
-    {
-      id: uid(),
-      name: "Unclaimed rewards",
-      value: formatCurrency(2700),
-    },
-    {
-      id: uid(),
-      name: "Total Value",
-      value: formatCurrency(3069),
-    },
-    {
-      id: uid(),
-      name: "Total NFTs",
-      value: 1586,
-    },
-    {
-      id: uid(),
-      name: "Staked",
-      value: 0,
-    },
-    {
-      id: uid(),
-      name: "Checked",
-      value: 0,
-    },
-    {
-      id: uid(),
-      name: "Unchecked",
-      value: 186,
-    },
-  ]);
-  const handleClick = () => {};
+  // hooks
+  const { stats: tempStats } = useStats();
+  const { NFTCollection, NFTStaker } = useContract();
+  const { account } = useWallet();
+  const router = useRouter();
+
+  // State variables
+  const [assets, setAssets] = useState<IExtAsset[]>([]);
+  const [checked, setChecked] = useState<IExtAsset[]>([]);
+  const [tokens, setTokens] = useState([0]);
+  const [stats, setStats] = useState<IStat[]>([]);
+
+  // Functions
+  const redirect = () => {
+    router.push("/marketplace");
+  };
+  const stake = () => {};
+  const stakeAll = () => {};
+  const unStakeAll = () => {};
+  const check = (id: string | number) => {
+    const newAssets = assets.map((asset) => {
+      if (asset.tokenId === id) {
+        asset = {
+          ...asset,
+          checked: true,
+        };
+      }
+      return asset;
+    });
+    const newStats = stats.map((stat) => {
+      if (stat.name.toLowerCase() === "checked") {
+        stat = {
+          ...stat,
+          value: Number(stat.value) + 1,
+        };
+      }
+      if (stat.name.toLowerCase() === "unchecked") {
+        stat = {
+          ...stat,
+          value: Number(stat.value) - 1,
+        };
+      }
+      return stat;
+    });
+    setStats(newStats);
+    setAssets(newAssets);
+    setTokens([...tokens, Number(id)]);
+  };
+  const getAssets = async () => {
+    if (!NFTCollection) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+    try {
+      const tokenIds = (await NFTCollection._tokenIds()).toString();
+      for (let index = 0; index <= tokenIds; index++) {
+        if (index) {
+          let asset = await NFTCollection.idToTokenItem(index);
+          asset = {
+            tokenId: asset._tokenId.toString(),
+            title: "That cool NFT",
+            image: "/Crypto-Staking-Platform-for-2022.webp",
+            createdAt: formatDateRelative(new Date(Number(asset._createdAt))),
+            owner: asset._owner,
+            userAvatar: asset._userAvatar,
+            username: asset._username,
+            price: "0.2",
+          };
+          setTokens([...tokens, index]);
+          setAssets([...assets, asset]);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error: Asset query failed");
+    }
+  };
+  const getStats = async () => {
+    try {
+      let claimed = await NFTStaker.claimed(account);
+      claimed = claimed.toString();
+      let earningInfo = await NFTStaker.earningInfo(tokens);
+      earningInfo = earningInfo.map((el) =>
+        Math.ceil(Number(ethers.utils.formatEther(el.toString())))
+      );
+      let totalNFTs = await NFTCollection.balanceOf(account);
+      totalNFTs = totalNFTs.toString();
+
+      let totalStaked = await NFTStaker.totalStaked(account);
+      totalStaked = totalStaked.toString();
+
+      console.log({
+        claimed,
+        earningInfo,
+        totalNFTs,
+        totalStaked,
+      });
+    } catch (error) {
+      toast.error("Error: Failed to retrieve staking info");
+      console.log(error);
+    }
+  };
+
+  // Effectful code
+  useEffect(() => {
+    getAssets();
+    NFTStaker && getStats();
+    return () => {};
+  }, [NFTCollection]);
+
+  useEffect(() => {
+    const stats = tempStats.map((stat) => {
+      if (stat.name.toLowerCase() === "unchecked") {
+        stat = {
+          ...stat,
+          value: assets.length,
+        };
+      }
+      return stat;
+    });
+    setStats(stats);
+  }, [assets]);
   return (
-    <section className="sm:max-w-screen-xl sm:mx-auto mt-24 mb-1">
+    <main className="sm:max-w-screen-xl sm:mx-auto mt-24 mb-1">
       <div className="grid grid-cols-3 min-h-[75vh]">
         <div className="col-start-1 col-end-3 border-r-[1px] border-[#ffffff34] pr-4">
           <div className="flex flex-row items-center justify-between">
@@ -54,13 +143,13 @@ const Staking = () => {
               <Button
                 text="Stake All"
                 right={true}
-                onClick={handleClick}
+                onClick={stakeAll}
                 className="btn mt-0 sm:mr-3 w-fit h-10 sm:w-auto"
               />
               <Button
                 text="Unstake All"
                 left={true}
-                onClick={handleClick}
+                onClick={unStakeAll}
                 className="btn-variant mt-0 w-fit h-10 sm:w-auto "
               />
             </div>
@@ -78,11 +167,72 @@ const Staking = () => {
               </div>
             ))}
           </div>
-          <StakingNFTList />
+          <section className="flex flex-col">
+            {assets.length > 0 || checked.length > 0 ? (
+              <>
+                {assets.length > 0 && (
+                  <section className="w-full mt-4">
+                    <h1 className="font-bold text-sm uppercase mb-3">
+                      Unchecked
+                    </h1>
+                    <section className="staking-items grid w-full">
+                      {assets.map((asset, index) => (
+                        <Asset
+                          asset={asset}
+                          index={index}
+                          length={assets.length}
+                          key={Number(asset.tokenId) * Date.now()}
+                          stake={true}
+                          handleCheck={check}
+                          handleStake={stake}
+                        />
+                      ))}
+                    </section>
+                  </section>
+                )}
+                {checked.length > 0 && (
+                  <section className="w-full mt-4">
+                    <h1 className="text-sm font-bold uppercase mb-3">
+                      Checked
+                    </h1>
+                    <section className="staking-items grid w-full">
+                      {checked.map((asset, index) => (
+                        <Asset
+                          asset={asset}
+                          index={index}
+                          length={checked.length}
+                          key={Number(asset.tokenId) * Date.now()}
+                          stake={true}
+                          handleCheck={check}
+                          handleStake={stake}
+                        />
+                      ))}
+                    </section>
+                  </section>
+                )}
+              </>
+            ) : (
+              <div className="self-center justify-self-center flex flex-col items-center justify-center w-[300px] mt-24">
+                <h1 className="font-bold text-base">No NFTs Available</h1>
+                <h2 className="text-center text-gray-500 mt-2">
+                  You don't seem to have any assets to stake. Buy some to get
+                  rewards!!
+                </h2>
+                <Button
+                  text="Purchase"
+                  left={true}
+                  onClick={redirect}
+                  className="btn-variant w-fit h-10"
+                />
+              </div>
+            )}
+          </section>
         </div>
-        <div className="col-start-3 col-end-4"></div>
+        <div className="col-start-3 col-end-4 px-3">
+          <Staker />
+        </div>
       </div>
-    </section>
+    </main>
   );
 };
 

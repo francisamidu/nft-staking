@@ -18,7 +18,8 @@ contract NFTStaker is Ownable, IERC721Receiver {
     NFTReward token;
 
     // Keeps track of total staked tokens by user
-    uint256 public totalStaked;
+    mapping(address=>uint256) public totalStaked;
+    mapping(address=>uint256) public claimed;
 
     // Keeps track of stakes
     mapping(uint256=>Stake) public vault;
@@ -35,7 +36,7 @@ contract NFTStaker is Ownable, IERC721Receiver {
     // Adds tokens to the staking vault
     function stake(uint256[] calldata tokenIds) external {
         uint256 tokenId;
-        totalStaked += tokenIds.length;
+        totalStaked[msg.sender] += tokenIds.length;
         for (uint i = 0; i < tokenIds.length; i++)
         {
             tokenId = tokenIds[i];
@@ -57,7 +58,7 @@ contract NFTStaker is Ownable, IERC721Receiver {
     // Removes tokens from vault
     function _unstakeMany(address account, uint256[] calldata tokenIds) internal {
         uint256 tokenId;
-        totalStaked += tokenIds.length;
+        totalStaked[account] += tokenIds.length;
 
         for (uint i = 0; i < tokenIds.length; i++)
         {
@@ -82,7 +83,7 @@ contract NFTStaker is Ownable, IERC721Receiver {
             Stake memory _stake = vault[tokenId];
             require(_stake.owner == msg.sender, "Error: Not your token");
             uint256 stakedAt = _stake.timestamp;
-            earned += 10000 ether * (block.timestamp - stakedAt)/ 1 minutes;
+            earned += 10000 ether * (block.timestamp - stakedAt)/ 1 days;
 
              vault[tokenId] = Stake({
                 owner: msg.sender,
@@ -94,6 +95,7 @@ contract NFTStaker is Ownable, IERC721Receiver {
 
         if(earned > 0){
             earned = earned / 10000;
+            claimed[msg.sender] = earned;
             token.mint(account, earned);
         }
 
@@ -108,7 +110,7 @@ contract NFTStaker is Ownable, IERC721Receiver {
     function earningInfo(uint256[] calldata tokenIds) external view returns (uint256[2] memory info){
         uint256 tokenId;
         uint256 earned = 0;
-        for (uint i = 0; i < tokenIds.length; i++)
+        for (uint i = 1; i < tokenIds.length; i++)
         {
             Stake memory _stake = vault[tokenId];
             uint256 stakedAt = _stake.timestamp;

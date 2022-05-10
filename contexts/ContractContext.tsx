@@ -1,14 +1,23 @@
 import React, {
   createContext,
+  Dispatch,
   PropsWithChildren,
   ReactNode,
+  SetStateAction,
   useContext,
   useEffect,
   useState,
 } from "react";
+import { Signer as JsonRpcSigner } from "ethers/src.ts/ethers";
 import { Contract } from "ethers";
 
-const ContractContext = createContext(null);
+type ContractValues = {
+  NFTStaker: Contract;
+  NFTCollection: Contract;
+  setNFTCollection: Dispatch<SetStateAction<Contract>>;
+  setNFTStaker: Dispatch<SetStateAction<Contract>>;
+};
+const ContractContext = createContext<ContractValues>(null);
 export const ContractProvider = ({
   children,
 }: PropsWithChildren<Partial<ReactNode>>) => {

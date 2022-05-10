@@ -61,13 +61,7 @@ const Nav = ({ color }: { color?: string }) => {
           account.length
         )}`
       );
-      setBalance(
-        Number(
-          Number(accountBalance) > 10000
-            ? accountBalance.slice(0, 4)
-            : accountBalance
-        )
-      );
+      setBalance(Number(accountBalance));
     }
   }, [active, account]);
 
@@ -77,7 +71,7 @@ const Nav = ({ color }: { color?: string }) => {
         color ? color : ""
       } fixed top-0 left-0 w-full z-20`}
     >
-      <div className="sm:max-w-screen-xl sm:mx-auto relative border-b-[1px] border-[#ffffff34] py-3">
+      <div className="sm:max-w-screen-xl sm:mx-auto relative border-b-[1px] border-[#ffffff34] py-2">
         <nav className="flex flex-row items-center justify-between">
           <h1 className="font-bold text-base uppercase">{name}</h1>
           <div className="sm:flex flex-row items-center relative">
@@ -96,13 +90,16 @@ const Nav = ({ color }: { color?: string }) => {
               ))}
               <Button
                 text="Start Staking"
-                className="btn-variant mt-0 ml-2 text-sm font-bold rounded-xl"
+                className="btn-variant mt-0 ml-2 text-sm font-bold rounded-xl h-10"
                 onClick={() => redirect("/staking")}
               />
             </div>
-            <div className="ml-3 rounded-3xl hidden sm:flex flex-row items-center border-[1px] border-[#ffffff34] cursor-pointer">
+            <div
+              className="ml-3 rounded-3xl hidden sm:flex flex-row items-center border-[1px] border-[#ffffff34] cursor-pointer"
+              onClick={() => connectWallet()}
+            >
               <span className="hidden sm:block font-bold mx-4 mr-6  text-white">
-                0.00
+                {balance}
               </span>
               <Image
                 className="rounded-full"

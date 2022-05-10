@@ -10,16 +10,15 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract NFTCollection is ERC721URIStorage, ReentrancyGuard  {
     using Counters for Counters.Counter;
     Counters.Counter public _tokenIds;
-  
-    // uint256 public cost;
-    // uint256 public maxSupply;
 
-    bool public revealed = false;
+    uint256 public cost = 0.03 ether;
 
     struct Token {
         uint256 _tokenId;
         address _owner;
         uint256 _createdAt;
+        string _userAvatar;
+        string _username;
     }
 
     event TokenMinted(uint256 id, uint256 timestamp);
@@ -29,25 +28,23 @@ contract NFTCollection is ERC721URIStorage, ReentrancyGuard  {
     constructor(
     string memory _tokenName,
     string memory _tokenSymbol
-    // uint256 _cost,
-    // uint256 _maxSupply
-  ) ERC721 (_tokenName, _tokenSymbol) {
-    // setCost(_cost);
-    // maxSupply = _maxSupply;
-  }
+  ) ERC721 (_tokenName, _tokenSymbol) {}
 
     function _baseURI() internal pure override returns (string memory baseURI) {
-        return "https://ipfs.infura.io/ipfs/";
+        return "https://gateway.ipfs.io/";
     }   
 
-    function mint(address to, string memory _tokenURI, uint256 createdAt) public {
+    function mint(address to, string memory _tokenURI, uint256 createdAt, string memory userAvatar, string memory username) payable public {
+        require(msg.value != 0, "Please provide fees");
+        require(msg.value >= cost, "Not enough funds to make purchase");
         _tokenIds.increment();
         uint256 tokenId = _tokenIds.current();
         idToTokenItem[tokenId] = Token({
            _tokenId: tokenId,
            _owner: to,
-           _createdAt: createdAt
-
+           _createdAt: createdAt,
+           _userAvatar: userAvatar,
+           _username: username
         });         
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, _tokenURI);

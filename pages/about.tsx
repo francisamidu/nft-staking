@@ -17,7 +17,7 @@ const About = () => {
       <div className="text-center">
         <h1 className="font-bold text-base uppercase">About {name}</h1>
         <p className="text-gray-500 my-1 sm:w-3/5 sm:mx-auto">
-          NFT staking is the process of locking/depositting your NFT assets into
+          NFT staking is the process of locking/depositing your NFT assets into
           a pool to earn passive income. {name} is one of the industry leading
           projects that help you benefit from staking. Stake your NFTs in our
           pools an earn up to 6%.
@@ -99,7 +99,7 @@ const About = () => {
                   <ICheck className="mr-3 text-white" />
                   <p className="text-gray-500">
                     Time:
-                    <span className="text-white ml-1">2 month</span>
+                    <span className="text-white ml-1">2 months</span>
                   </p>
                 </div>
                 <div className="flex flex-row items-center mb-3">

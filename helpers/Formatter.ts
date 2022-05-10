@@ -1,3 +1,5 @@
+import { formatDistance } from "date-fns";
+
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
 const MONTHS = [
   "Jan",
@@ -29,19 +31,34 @@ class Formatter {
     const year = newDate.getFullYear();
     return `${date_}/${month}/${year}`;
   }
-  static formatCurrency(num: number | string) {
-    const newNumber = Number(num);
+  static formatDateRelative(date: Date) {
+    return formatDistance(date, new Date(), {
+      addSuffix: true,
+    });
+  }
+  static formatCurrency(value: number | string) {
+    const newNumber = Number(value);
     if (typeof newNumber === "number") {
       const formatter = new Intl.NumberFormat("en-Us", {
         style: "currency",
-        currency: "EUR",
+        currency: "USD",
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
       });
       return formatter.format(newNumber);
     } else {
-      throw new Error(`${num} is not a number`);
+      throw new Error(`${value} is not a number`);
     }
+  }
+  static formatCurrencyNumber(value: string | number) {
+    const newValue = Number(
+      String(value)
+        .split("")
+        .map((val) => Number(val))
+        .filter((val) => val > -1)
+        .join("")
+    );
+    return newValue;
   }
 }
 export default Formatter;

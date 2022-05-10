@@ -7,7 +7,13 @@ import { ToastContainer } from "react-toastify";
 
 import { NextPage } from "next";
 
-import { AppProvider, ContractProvider, WalletProvider } from "../contexts";
+import {
+  AppProvider,
+  AssetProvider,
+  ContractProvider,
+  StatsProvider,
+  WalletProvider,
+} from "../contexts";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -21,12 +27,16 @@ const App = ({ Component, pageProps }: AppPropsWithLayout): unknown => {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <AppProvider>
-      <ContractProvider>
-        <WalletProvider>
-          <ToastContainer />
-          {getLayout(<Component {...pageProps} />)}
-        </WalletProvider>
-      </ContractProvider>
+      <AssetProvider>
+        <ContractProvider>
+          <StatsProvider>
+            <WalletProvider>
+              <ToastContainer />
+              {getLayout(<Component {...pageProps} />)}
+            </WalletProvider>
+          </StatsProvider>
+        </ContractProvider>
+      </AssetProvider>
     </AppProvider>
   );
 };
