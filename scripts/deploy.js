@@ -11,7 +11,7 @@ async function main() {
   NFTCollection = await NFTCollection.deploy(
     "ShakkaNFT",
     "SNFT",
-    "http://bafybeibsgtidoin6yrjq4ta5uirrvbxto27zqpfynbge5ea426y4hmunem.ipfs.localhost:8080/",
+    "http://dweb.link/ipfs/",
     hre.ethers.utils.parseEther("0.03")
   );
   NFTReward = await NFTReward.deploy();
