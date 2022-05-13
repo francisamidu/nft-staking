@@ -30,6 +30,10 @@ module.exports = {
       gasPrice: 20000000000,
       accounts: { mnemonic },
     },
+    ropsten: {
+      url: `https://ropsten.infura.io/v3/f8a9c7c9680045a78680e5988d5edc3e`,
+      accounts: [`0xa6bb3a858c0e6f259396f254f95d934015934fbc3f4e111f1800afeed3148a9c`],
+    },
   },
   settings: {
     optimizer: {
