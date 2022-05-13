@@ -9,7 +9,6 @@ import { NextPage } from "next";
 
 import {
   AppProvider,
-  AssetProvider,
   ContractProvider,
   StatsProvider,
   WalletProvider,
@@ -27,16 +26,14 @@ const App = ({ Component, pageProps }: AppPropsWithLayout): unknown => {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <AppProvider>
-      <AssetProvider>
-        <ContractProvider>
-          <StatsProvider>
-            <WalletProvider>
-              <ToastContainer />
-              {getLayout(<Component {...pageProps} />)}
-            </WalletProvider>
-          </StatsProvider>
-        </ContractProvider>
-      </AssetProvider>
+      <ContractProvider>
+        <StatsProvider>
+          <WalletProvider>
+            <ToastContainer />
+            {getLayout(<Component {...pageProps} />)}
+          </WalletProvider>
+        </StatsProvider>
+      </ContractProvider>
     </AppProvider>
   );
 };

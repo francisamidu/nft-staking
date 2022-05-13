@@ -1,8 +1,3 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 
 async function main() {
@@ -13,7 +8,12 @@ async function main() {
   let NFTReward = await hre.ethers.getContractFactory("NFTReward");
   let NFTStaker = await hre.ethers.getContractFactory("NFTStaker");
 
-  NFTCollection = await NFTCollection.deploy("ShakkaNFT", "SNFT");
+  NFTCollection = await NFTCollection.deploy(
+    "ShakkaNFT",
+    "SNFT",
+    "http://bafybeibsgtidoin6yrjq4ta5uirrvbxto27zqpfynbge5ea426y4hmunem.ipfs.localhost:8080/",
+    hre.ethers.utils.parseEther("0.03")
+  );
   NFTReward = await NFTReward.deploy();
 
   await NFTCollection.deployed();
@@ -21,7 +21,6 @@ async function main() {
   NFTStaker = await NFTStaker.deploy(NFTCollection.address, NFTReward.address);
 
   console.log("NFT Collection deployed to:", NFTCollection.address);
-  console.log("NFT Reward deployed to:", NFTReward.address);
   console.log("NFT Staker deployed to:", NFTStaker.address);
 }
 

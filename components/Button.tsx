@@ -1,6 +1,8 @@
-import React, { MouseEventHandler } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 
 type ButtonProps = {
+  amount?: number;
+  cost?: number;
   icon?: JSX.Element;
   text: string;
   type?: "button" | "submit";
@@ -11,6 +13,8 @@ type ButtonProps = {
 };
 
 const Button = ({
+  amount,
+  cost,
   text,
   onClick,
   left = false,
@@ -19,6 +23,12 @@ const Button = ({
   type = "button",
   icon,
 }: ButtonProps) => {
+  const [buttonText, setButtonText] = useState(text);
+  useEffect(() => {
+    if (typeof amount === "number" && typeof cost === "number") {
+      setButtonText(`${text} (${amount * cost} Eth)`);
+    }
+  }, [amount, cost]);
   const handleClick = typeof onClick === "function" ? onClick : () => {};
   if (className) {
     return (
@@ -28,7 +38,7 @@ const Button = ({
         type={type}
       >
         {left && icon ? icon : null}
-        {text}
+        {buttonText}
         {right && icon ? icon : null}
       </button>
     );
@@ -40,7 +50,7 @@ const Button = ({
       type={type}
     >
       {left && icon ? icon : null}
-      {text}
+      {buttonText}
       {right && icon ? icon : null}
     </button>
   );

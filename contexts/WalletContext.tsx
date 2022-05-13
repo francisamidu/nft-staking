@@ -81,7 +81,7 @@ export const WalletProvider = ({ children }: PropsWithChildren<ReactNode>) => {
       const signer = provider.getSigner();
 
       const signerAddress = await signer.getAddress();
-      const accountBalance = Math.ceil(
+      let accountBalance = Math.floor(
         Number(
           ethers.utils.formatEther(await provider.getBalance(signerAddress))
         )

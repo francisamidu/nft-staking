@@ -123,7 +123,7 @@ contract NFTStaker is Ownable, IERC721Receiver {
     // Balance of rewards
     function balanceOf(address account) public view returns(uint256 _balance){
         uint256 balance = 0;        
-        uint256 supply = nft._tokenIds();
+        uint256 supply = nft._tokenId();
 
         for (uint i = 0; i < supply; i++)
         {
@@ -137,7 +137,7 @@ contract NFTStaker is Ownable, IERC721Receiver {
     // Tokens of owner
     function tokensOfOwner(address account) public view returns(uint256[] memory ownerTokens){
 
-        uint256 supply = nft._tokenIds();        
+        uint256 supply = nft._tokenId();        
         uint256[] memory tmp = new uint256[](supply);
 
         uint256 index = 0;

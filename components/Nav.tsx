@@ -98,15 +98,27 @@ const Nav = ({ color }: { color?: string }) => {
               className="ml-3 rounded-3xl hidden sm:flex flex-row items-center border-[1px] border-[#ffffff34] cursor-pointer"
               onClick={() => connectWallet()}
             >
-              <span className="hidden sm:block font-bold mx-4 mr-6  text-white">
-                {balance}
-              </span>
-              <Image
-                className="rounded-full"
-                width="35"
-                height="35"
-                src="/avatar1.png"
-              ></Image>
+              {!accountBalance ? (
+                <>
+                  <Button
+                    text="Connect Wallet"
+                    className="btn mt-0  text-sm font-bold rounded-2xl h-10"
+                    onClick={() => redirect("/staking")}
+                  />
+                </>
+              ) : (
+                <>
+                  <span className="hidden sm:block font-bold mx-4 mr-2  text-white">
+                    {trimmedAddress}
+                  </span>
+                  <Image
+                    className="rounded-full"
+                    width="35"
+                    height="35"
+                    src="/avatar1.png"
+                  ></Image>
+                </>
+              )}
             </div>
             <IMenu
               className="text-2xl text-white ml-2 sm:hidden cursor-pointer"

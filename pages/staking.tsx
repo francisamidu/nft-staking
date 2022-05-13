@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Asset, Button, Layout, Staker } from "../components";
 import { useContract, useStats, useWallet } from "../contexts";
-import { formatDateRelative } from "../helpers";
 import { IExtAsset, IStat } from "../interfaces";
 
 const Staking = () => {
@@ -59,26 +58,35 @@ const Staking = () => {
   };
   const getAssets = async () => {
     if (!NFTCollection) {
-      toast.error("Please connect your wallet first");
+      toast.info("Please connect your wallet first");
       return;
     }
     try {
-      const tokenIds = (await NFTCollection._tokenIds()).toString();
-      for (let index = 0; index <= tokenIds; index++) {
-        if (index) {
-          let asset = await NFTCollection.idToTokenItem(index);
-          asset = {
-            tokenId: asset._tokenId.toString(),
-            title: "That cool NFT",
-            image: "/Crypto-Staking-Platform-for-2022.webp",
-            createdAt: formatDateRelative(new Date(Number(asset._createdAt))),
-            owner: asset._owner,
-            userAvatar: asset._userAvatar,
-            username: asset._username,
-            price: "0.2",
-          };
-          setTokens([...tokens, index]);
-          setAssets([...assets, asset]);
+      let tokenIds = await NFTCollection.balanceOf(account);
+      tokenIds = tokenIds.toNumber();
+      tokenIds = Array.from(Array(tokenIds + 1).keys());
+      for (let tokenId of tokenIds) {
+        if (tokenId) {
+          const tokenUri = await NFTCollection.tokenURI(tokenId);
+          let asset = null;
+          console.log(tokenUri);
+          let meta: any = await fetch(tokenUri, {
+            mode: "no-cors",
+            referrer: "localhost",
+            keepalive: true,
+          });
+          meta = await meta.text();
+          // meta = await meta.json();
+          // asset = {
+          //   active: false,
+          //   checked: false,
+          //   tokenId,
+          //   name: meta.name,
+          //   image: meta.image,
+          //   owner: account,
+          // };
+          // setTokens([...tokens, tokenId]);
+          // setAssets([...assets, asset]);
         }
       }
     } catch (error) {
@@ -90,22 +98,38 @@ const Staking = () => {
     try {
       let claimed = await NFTStaker.claimed(account);
       claimed = claimed.toString();
+
       let earningInfo = await NFTStaker.earningInfo(tokens);
       earningInfo = earningInfo.map((el) =>
         Math.ceil(Number(ethers.utils.formatEther(el.toString())))
       );
+
       let totalNFTs = await NFTCollection.balanceOf(account);
       totalNFTs = totalNFTs.toString();
 
       let totalStaked = await NFTStaker.totalStaked(account);
       totalStaked = totalStaked.toString();
 
-      console.log({
-        claimed,
-        earningInfo,
-        totalNFTs,
-        totalStaked,
+      const stats = tempStats.map((stat) => {
+        if (stat.name.toLowerCase().includes("claimed")) {
+          stat = {
+            ...stat,
+            value: claimed,
+          };
+        } else if (stat.name.toLowerCase().includes("nfts")) {
+          stat = {
+            ...stat,
+            value: totalNFTs,
+          };
+        } else if (stat.name.toLowerCase().includes("staked")) {
+          stat = {
+            ...stat,
+            value: totalStaked,
+          };
+        }
+        return stat;
       });
+      setStats(stats);
     } catch (error) {
       toast.error("Error: Failed to retrieve staking info");
       console.log(error);
