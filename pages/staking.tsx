@@ -62,31 +62,28 @@ const Staking = () => {
       return;
     }
     try {
-      let tokenIds = await NFTCollection.balanceOf(account);
-      tokenIds = tokenIds.toNumber();
-      tokenIds = Array.from(Array(tokenIds + 1).keys());
-      for (let tokenId of tokenIds) {
-        if (tokenId) {
-          const tokenUri = await NFTCollection.tokenURI(tokenId);
+      let tokenIds = await NFTCollection._tokenId();
+      tokenIds = tokenIds.toString();      
+
+      for (let id = 0; id <= tokenIds; id++) {
+        if (id) {
+          const token = await NFTCollection.tokens(id);
+          const tokenUri = await NFTCollection.tokenURI(id);
           let asset = null;
-          console.log(tokenUri);
-          let meta: any = await fetch(tokenUri, {
-            mode: "no-cors",
-            referrer: "localhost",
-            keepalive: true,
-          });
-          meta = await meta.text();
-          // meta = await meta.json();
-          // asset = {
-          //   active: false,
-          //   checked: false,
-          //   tokenId,
-          //   name: meta.name,
-          //   image: meta.image,
-          //   owner: account,
-          // };
-          // setTokens([...tokens, tokenId]);
-          // setAssets([...assets, asset]);
+          let meta: any = await fetch(tokenUri);
+          meta = await meta.json();
+          if(account === token.owner){
+            asset = {
+              active: false,
+              checked: false,
+              tokenId: token.tokenId,
+              name: meta.name,
+              image: meta.image,
+              owner: token.owner,
+            };
+            setTokens([...tokens, tokenId]);
+            setAssets([...assets, asset]);
+          }          
         }
       }
     } catch (error) {

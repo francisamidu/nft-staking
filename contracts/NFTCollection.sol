@@ -21,7 +21,13 @@ contract NFTCollection is ERC721Enumerable, Ownable, ReentrancyGuard {
   uint256 private maxSup;
   uint256 constant MAX_SUPPLY = 46*10**18;
 
+  struct Token {
+    uint256 tokenId;
+    address owner;
+  }
+
   mapping(address=>uint256) private _balances;
+  mapping(uint256=>Token) public tokens;
 
   event TokenMinted(uint256 tokenId);
 
@@ -49,7 +55,7 @@ contract NFTCollection is ERC721Enumerable, Ownable, ReentrancyGuard {
   }
 
   // Mints new NFTs to the 
-  function mint(address to, uint256 amount) public payable onlyOwner nonReentrant {
+  function mint(address to, uint256 amount) public payable nonReentrant {
     _tokenId.increment();
 
     require(msg.value >= _cost,"Not enough funds to mint");
@@ -59,6 +65,10 @@ contract NFTCollection is ERC721Enumerable, Ownable, ReentrancyGuard {
     _balances[to] = _balances[to].add(amount);
     for (uint256 i = 1; i <= amount; i++) {
       _mint(to, i);
+      tokens[i] = Token({
+       tokenId: i,
+       owner: msg.sender
+      });
     }
   }
 

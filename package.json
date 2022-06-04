@@ -29,6 +29,7 @@
 		"next": "*",
 		"react": "*",
 		"react-beautiful-dnd": "^13.1.0",
+		"react-copy-to-clipboard": "^5.1.0",
 		"react-dom": "^*",
 		"react-icons": "*",
 		"react-moralis": "^1.3.4",
